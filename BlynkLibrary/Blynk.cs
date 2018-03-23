@@ -183,13 +183,12 @@ namespace BlynkLibrary
             {
             }
 
-            // Create a timer to handle the ping/reconnection period
-            var blynkTimerElapsedTimer = new Timer(5000);
-            blynkTimerElapsedTimer.Elapsed += (sender, e) => timer_Tick(sender as Timer);
-            blynkTimerElapsedTimer.Start();
+            if (blynkTimer == null)
+            {
+                blynkTimer = new Timer(5000);
+                blynkTimer.Elapsed += (sender, e) => timer_Tick(sender as Timer);
+            }
 
-            blynkTimer = new Timer(5000);
-            blynkTimer.Elapsed += (sender, e) => timer_Tick(sender as Timer);
             blynkTimer.Start();
 
             return result;
@@ -206,8 +205,8 @@ namespace BlynkLibrary
 
                 connected = false;
 
-                tcpStream.Dispose();
-                tcpClient.Dispose();
+                tcpStream?.Dispose();
+                tcpClient?.Dispose();
             }
             catch ( Exception )
             {
@@ -468,10 +467,8 @@ namespace BlynkLibrary
             }
             else
             {
-                timer.Stop();
-
-                tcpStream.Dispose();
-                tcpClient.Dispose();
+                tcpStream?.Dispose();
+                tcpClient?.Dispose();
 
                 Connect();
             }
